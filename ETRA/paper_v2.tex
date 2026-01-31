@@ -1,0 +1,221 @@
+\documentclass[manuscript,review,anonymous]{acmart}
+
+% --- Packages ---
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{xcolor}
+
+% --- Author-year citations per ETRA 2026 ---
+\citestyle{acmauthoryear}
+
+% --- Metadata ---
+\setcopyright{acmlicensed}
+\acmConference[ETRA '26]{Symposium on Eye Tracking Research \& Applications}{June 2026}{Location}
+\acmYear{2026}
+\acmDOI{XXXXXXX.XXXXXXX}
+\acmISBN{978-1-4503-XXXX-X/26/06}
+
+% --- Privacy and Ethics Statement (ETRA 2026 Requirement) ---
+% This statement should be placed in the camera-ready version or acknowledgments section
+% Privacy and Ethics Statement:
+% This research analyzes behavioral data (gaze, head motion, pupillometry) collected with 
+% informed consent under IRB approval. All data were anonymized and stored securely. 
+% The proposed attention-inference methods aim to improve user experience in VR; however, 
+% we acknowledge potential misuse for surveillance or manipulation. We recommend that 
+% deployments include user consent mechanisms and transparent disclosure of tracking.
+
+\title{Behavioral Markers of Sustained Viewing in VR Museum Exploration: Head Stability, Gaze Dynamics, and Pupillary Response}
+
+\begin{CCSXML}
+<ccs2012>
+   <concept>
+       <concept_id>10003120.10003121.10003129</concept_id>
+       <concept_desc>Human-centered computing~Interactive systems and tools</concept_desc>
+       <concept_significance>500</concept_significance>
+   </concept>
+   <concept>
+       <concept_id>10003120.10003121.10003122.10003334</concept_id>
+       <concept_desc>Human-centered computing~User studies</concept_desc>
+       <concept_significance>300</concept_significance>
+   </concept>
+   <concept>
+       <concept_id>10003120.10003123.10010860</concept_id>
+       <concept_desc>Human-centered computing~Virtual reality</concept_desc>
+       <concept_significance>500</concept_significance>
+   </concept>
+</ccs2012>
+\end{CCSXML}
+
+\ccsdesc[500]{Human-centered computing~Interactive systems and tools}
+\ccsdesc[300]{Human-centered computing~User studies}
+\ccsdesc[500]{Human-centered computing~Virtual reality}
+
+\begin{document}
+
+\begin{abstract}
+We analyze behavioral markers of sustained object viewing during free VR museum exploration using 6DoF head motion, gaze dynamics, and pupil diameter (N=20). Viewing episodes were identified through retrospective think-aloud (RTA) coding, yielding 758 episodes for analysis. In a linear mixed model controlling for subject and exhibit, lower head rotational velocity significantly predicted longer dwell time ($\beta$=-0.280, p<.001). For episodes exceeding 3 seconds, gaze behavior exhibits a temporal shift: dispersion decreases while spatial entropy increases, suggesting transition from broad sampling to localized exploration. Event-related pupil responses time-locked to gaze onset were larger for long-dwell than short-dwell episodes (difference=0.107mm, p=.007, d=0.30). Head stability and early pupil dilation provide complementary signals beyond dwell-time thresholds for context-aware caption triggering in VR museums.
+\end{abstract}
+
+\keywords{Virtual Reality, Eye Tracking, Attention, Pupillometry, Head Motion}
+
+\begin{teaserfigure}
+\centering
+\includegraphics[width=\textwidth]{figures/fig_teaser.png}
+\caption{Overview of our approach. Participants explored a virtual museum while we recorded gaze, pupil diameter, and 6DoF head pose. We analyzed behavioral markers that differentiate sustained viewing from casual glances, finding that head rotational stability, temporal gaze dynamics, and early pupil dilation provide complementary information for attention-based triggering.}
+\Description{A teaser figure showing the VR museum environment, data collection pipeline, and three main analysis components: head stability, temporal gaze patterns, and pupil response.}
+\end{teaserfigure}
+
+\maketitle
+
+\section{Introduction}
+Immersive VR applications such as virtual museums increasingly seek to deliver context-aware information, for example, displaying exhibit captions or audio descriptions when users show interest in specific objects \cite{shimizu2025, dondi2023, lu2021}. A core technical challenge is determining the appropriate trigger for such information delivery. Fixed dwell-time thresholds (e.g., displaying a caption after 500ms of gaze on an object) are widely used \cite{spakov2004, isomoto2023} but suffer from two problems. First, users may fixate on uninteresting objects due to visual complexity, fatigue, or incidental viewing, leading to false-positive triggers \cite{zhang2011}. Second, users may briefly glance at interesting objects they intend to revisit, resulting in missed opportunities.
+
+Head-mounted displays (HMDs) with integrated eye tracking provide richer behavioral data than traditional 2D displays. In addition to gaze position, VR systems continuously record 6 degrees-of-freedom (6DoF) head pose, enabling analysis of head-gaze coordination. Commercial eye-tracking HMDs also provide pupil diameter measurements, which prior research has linked to cognitive load and arousal \cite{beatty1982, mathot2018}.
+
+This paper investigates whether these additional signals, specifically head motion stability and pupillary response, provide complementary information for dwell-based triggering. We analyze data from 20 participants exploring a virtual museum and address three research questions.
+
+\begin{enumerate}
+    \item \textbf{RQ1.} Does head stability during object viewing predict viewing duration?
+    \item \textbf{RQ2.} Do viewing episodes exhibit characteristic temporal patterns in gaze behavior?
+    \item \textbf{RQ3.} Does pupil dilation at gaze onset differ between long and short viewing episodes?
+\end{enumerate}
+
+We make three contributions. First, we show that head rotational stability significantly predicts dwell time in a linear mixed model. Second, we provide evidence of a two-phase viewing pattern with statistically significant temporal differences in gaze dispersion and entropy. Third, we show that event-related pupil response at gaze onset discriminates between long and short viewing episodes, which could serve as an early signal for adaptive triggering.
+
+\section{Related Work}
+
+Dwell time, defined as the cumulative duration of gaze on an area of interest (AOI), is the most widely used metric for inferring visual attention \cite{holmqvist2011}. In VR, dwell-based triggers are commonly used to activate UI elements or display information \cite{mutasim2021, shimizu2025}. Research on dwell-time optimization has explored speed-accuracy tradeoffs \cite{zhang2011} and online adjustment methods \cite{spakov2004}. Isomoto et al. \cite{isomoto2023} examined dwell time from a cognitive process perspective, suggesting that human processing stages influence optimal thresholds. However, dwell time alone has limited discriminative power for cognitive states such as interest or comprehension \cite{just1976}.
+
+Eye tracking in VR HMDs presents unique challenges. Recent evaluations have characterized signal quality limitations in commercial devices such as the Meta Quest Pro \cite{aziz2024}, while deep learning approaches have improved tracking robustness and precision \cite{barkevich2024}, enabling behavioral signal extraction for real-time applications.
+
+VR systems provide behavioral signals beyond gaze position. Unlike desktop eye tracking, VR continuously tracks 6DoF head pose \cite{hu2020}. Land \cite{land2009} characterized head-eye coordination during visual attention, and recent work has modeled this coordination in VR contexts \cite{pan2025}, showing that head motion patterns differ between task types \cite{clay2019}. Head stability during viewing may reflect focused attention, as users naturally minimize body movement when concentrating.
+
+Pupil dilation is an established marker of cognitive load, arousal, and interest \cite{beatty1982, sweller1988}. Event-related pupil responses (ERPRs) time-locked to fixation onset have been used to study attention capture and stimulus salience \cite{mathot2018}. Recent VR pupillometry work includes Pielage et al. \cite{pielage2025}, who validated VR-based pupillometry for listening effort, and Grootjen et al. \cite{grootjen2024}, who demonstrated real-time pupil-based adaptation of reading speed. These results indicate that pupil signals can drive adaptive VR interfaces despite HMD-specific artifacts.
+
+Recent work has explored gaze-based information presentation in VR museums and exhibitions \cite{dondi2023, lu2021}. Shimizu et al. \cite{shimizu2025} developed a floating caption system that displays exhibit information when users fixate on designated gaze points. The spatial contiguity principle suggests that integrating information near its referent improves learning \cite{ginns2006}. However, existing systems rely on fixed dwell thresholds without considering additional behavioral signals. Scene viewing research has identified characteristic phases in viewing behavior, with an initial overview phase followed by detailed examination \cite{unema2005}. Whether similar patterns emerge in VR object viewing remains unclear.
+
+
+\section{Methods}
+
+Twenty participants (N=20; 13 male, 7 female; mean age 31.2 years, SD=5.4) with normal or corrected-to-normal vision completed the study. We used a PICO 4 Enterprise HMD with integrated binocular eye tracking (90Hz sampling) and 6DoF inside-out tracking. The VR application was developed in Unity.
+
+The virtual museum contained 6 exhibits arranged in a 2$\times$3 grid (Figure~\ref{fig:environment}). Participants navigated freely using joystick locomotion. After eye tracker calibration, participants explored the museum for 5--6 minutes. They then completed a retrospective think-aloud (RTA) session watching a replay of their session to verbalize their thoughts. Viewing episodes were automatically segmented based on gaze target ID transitions (continuous gaze on a single exhibit, minimum 200ms). Two coders independently reviewed the RTA transcripts to identify episodes where participants expressed interest or engagement with an exhibit; automatic boundaries were adjusted when verbal reports indicated viewing continuation. Inter-coder agreement was high (Cohen's $\kappa$ = 0.89); disagreements were resolved through discussion, yielding 758 validated episodes for analysis.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.65\linewidth]{figures/fig_environment.png}
+\caption{Virtual museum environment. Participants freely explored 6 exhibits (3D artworks on pedestals with rope barriers) using joystick locomotion. The pink dot indicates the current gaze point, which was recorded along with head pose and pupil diameter at 60Hz. The environment featured consistent lighting to minimize luminance-related pupil artifacts.}
+\label{fig:environment}
+\end{figure}
+
+We logged synchronized time-series data at 60Hz (downsampled from 90Hz eye tracking for synchronization with Unity frame rate), including timestamp, gaze target ID, pupil diameter (left/right), world gaze point coordinates, head pose (position and quaternion), and blink count. Blinks were detected via the PICO SDK; gaps <200ms were linearly interpolated, and binocular pupil diameter was computed as the mean of left and right eyes. Head translational velocity was computed as $v_{pos} = \|\mathbf{p}_t - \mathbf{p}_{t-1}\| / \Delta t$ (m/s). For rotational velocity, we computed the relative quaternion $q_{rel} = q_{t-1}^{-1} \otimes q_t$ and extracted angular velocity as $\omega = 2 \cdot \arccos(|q_{rel,w}|) / \Delta t$ (rad/s). For each viewing episode, we computed dispersion (SD of gaze positions), spatial entropy (normalized entropy of 10$\times$10 gaze histogram), and scanpath length. For episodes $\geq$3 seconds, we divided each into three equal temporal phases (Early, Middle, Late). For event-related pupil response (ERPR), we extracted epochs from gaze onset to 1000ms after, excluding epochs with $>$20\% missing data. To avoid baseline confounds from luminance differences between objects, we used the 0--200ms window after gaze onset as baseline (before task-evoked dilation typically emerges) and measured pupil change in the 200--700ms window.
+
+Statistical analysis used linear mixed models (LMM) implemented via statsmodels, with crossed random intercepts for subject and exhibit to account for the nested structure. Post-hoc comparisons used paired t-tests with Bonferroni correction.
+
+\section{Results}
+
+The dataset contained 758 viewing episodes across 20 participants and 6 exhibits. Mean dwell time was 9.41s (SD=8.14). Table~\ref{tab:descriptive} summarizes key metrics.
+
+\begin{table}[h]
+\caption{Descriptive statistics for viewing episodes (N=758)}
+\label{tab:descriptive}
+\begin{tabular}{lcc}
+\toprule
+Metric & Mean & SD \\
+\midrule
+Dwell time (sec) & 9.41 & 8.14 \\
+Head pos velocity (m/s) & 0.54 & 0.36 \\
+Head rot velocity (rad/s) & 0.18 & 0.12 \\
+Pupil SD (mm) & 0.26 & 0.16 \\
+Spatial entropy (normalized) & 0.47 & 0.14 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+We fit a linear mixed model predicting log-transformed dwell time from standardized head velocity metrics, with crossed random intercepts for subject and exhibit. Head rotational velocity significantly predicted dwell time ($\beta$=-0.280, SE=0.078, p<.001), with the negative coefficient indicating that lower velocity (greater stability) was associated with longer viewing (Table~\ref{tab:lmm}, Figure~\ref{fig:head_stability}). Head translational velocity showed a weaker effect ($\beta$=-0.158, p=.047), which may partially reflect locomotion rather than pure head stability (see Limitations). The substantial random effect variance for subjects (0.512) indicates meaningful individual differences.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.65\linewidth]{figures/fig_head_stability.png}
+\caption{Head stability and viewing duration. Each point represents one subject$\times$exhibit mean (N=83; pairs without valid viewing episodes excluded). (a) Head translational velocity shows a negative trend with log-transformed dwell time. (b) Head rotational velocity shows a stronger negative relationship. Note: Statistical inference is from LMM on episode-level data (N=758), not these aggregated correlations.}
+\label{fig:head_stability}
+\end{figure}
+
+\begin{table}[h]
+\caption{Linear Mixed Model results predicting log(Dwell Time)}
+\label{tab:lmm}
+\begin{tabular}{lcccc}
+\toprule
+Predictor & $\beta$ & SE & z & p \\
+\midrule
+Intercept & 1.797 & 0.228 & 7.87 & <.001 \\
+Head Pos Velocity$_z$ & -0.158 & 0.080 & -1.98 & .047* \\
+Head Rot Velocity$_z$ & -0.280 & 0.078 & -3.60 & <.001*** \\
+Pupil SD$_z$ & 0.093 & 0.093 & 1.00 & .316 \\
+\midrule
+Random Effects & \multicolumn{4}{c}{Subject Var=0.512, Exhibit Var=0.118} \\
+\bottomrule
+\multicolumn{5}{l}{\small *p<.05, **p<.01, ***p<.001}
+\end{tabular}
+\end{table}
+
+Spatial entropy showed a moderate positive correlation with viewing duration (r=0.27, p<.001). For viewing episodes with dwell time $\geq$3 seconds (N=312, 41\% of total episodes), we analyzed temporal dynamics by dividing each episode into three equal phases (Early, Middle, Late). A linear mixed model with Phase (3 levels) as fixed effect and random intercepts for subject and exhibit revealed significant effects of temporal phase on dispersion ($\chi^2(2)$=9.82, p=.007) and entropy ($\chi^2(2)$=21.4, p$<$.001). Pairwise comparisons showed that dispersion decreased from Early to Middle phase (d=0.59), while entropy increased from Early to Middle (d=0.73) and from Early to Late (d=0.75). This pattern suggests a two-phase viewing structure: an initial overview phase with broad gaze sampling, transitioning to detailed exploration with spatially distributed fixations within a localized region (Figure~\ref{fig:temporal}).
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.65\linewidth]{figures/fig_temporal_pattern.png}
+\caption{Temporal evolution of gaze patterns across viewing phases. Each viewing episode ($\geq$3s) was divided into Early, Middle, and Late thirds. Left: Dispersion (SD of gaze positions) decreases over time, indicating transition from broad sampling to focused viewing. Center: Gaze velocity shows similar reduction. Right: Spatial entropy increases, reflecting more distributed exploration within increasingly localized regions. This two-phase pattern (overview $\rightarrow$ exploration) parallels findings from scene viewing research.}
+\label{fig:temporal}
+\end{figure}
+
+For event-related pupil response (ERPR), we used the 0--200ms window after gaze onset as baseline (before task-evoked dilation emerges) and computed mean pupil change in the 200--700ms window. This baseline choice avoids confounds from luminance and vergence differences between the previously viewed object and the current target. Of 758 episodes, 537 yielded valid epochs (excluding those with $>$20\% missing data). A median split of these 537 epochs classified episodes as Long-dwell (N=269) or Short-dwell (N=268). We fit a linear mixed model with dwell category as fixed effect and random intercepts for subject and exhibit. Long-dwell episodes showed significantly larger early pupil dilation than short-dwell episodes (estimate=0.107mm, SE=0.040, $\chi^2(1)$=7.16, p=.007, d=0.30), suggesting that pupil response shortly after gaze onset may serve as an early signal of sustained viewing (Figure~\ref{fig:erpr}).
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.65\linewidth]{figures/fig_erpr.png}
+\caption{Event-related pupil response (ERPR) time-locked to gaze onset. Red: Long-dwell episodes (above-median, N=269). Blue: Short-dwell episodes (below-median, N=268). The dashed line marks gaze onset (t=0). Statistical inference uses the mean pupil change in the 200--700ms window relative to a 0--200ms baseline (same-object baseline avoids cross-object luminance confounds). Long-dwell episodes show larger dilation (estimate=0.107mm, p=.007, d=0.30).}
+\label{fig:erpr}
+\end{figure}
+
+\section{Discussion}
+
+Head stability as a predictor of viewing duration has direct applications in VR. Unlike desktop eye tracking, VR systems have continuous access to 6DoF head pose at no additional cost. The negative relationship between head velocity and dwell time suggests that when users engage in sustained viewing, they stabilize their head to facilitate detailed visual inspection. This aligns with research on head-eye coordination during focused attention \cite{land2009}. In VR, where users can move their entire body, choosing to stabilize the head may be a strong signal of attentional engagement. VR applications could incorporate head stability as a feature in attention-based triggering, potentially reducing false positives during casual glances when the head is still moving.
+
+The two-phase viewing pattern we observed parallels findings from scene viewing research \cite{unema2005}. The transition from low to high entropy reflects increasingly distributed gaze within a progressively narrower spatial region. Users first broadly sample the exhibit, then explore specific details with more varied fixation patterns. This temporal structure suggests that caption timing could be adaptive, with information presented during the Middle or Late phase (after approximately 1 second) rather than immediately upon gaze arrival. Pupil dilation at gaze onset also predicts subsequent dwell time. Pupil dilation reflects cognitive load and arousal \cite{beatty1982}. Although the effect size was modest (d=0.30), pupil response could serve as an early signal to adjust trigger probability in combination with other features.
+
+Designers of context-aware VR systems could combine these behavioral signals. Head stability could weight trigger probability by inverse head velocity. Viewing phase information could delay triggers until the Middle or Late phase. Pupil response could increase trigger probability when dilation exceeds baseline, while dwell time remains the primary feature with adaptive thresholds. The substantial individual differences captured by our random effects suggest that personalized thresholds may outperform fixed values.
+
+\subsection{Toward a Unified Trigger Model}
+
+Our findings suggest that multiple behavioral signals can be combined for context-aware triggering. We propose a composite trigger probability that integrates dwell time, head stability, and early pupil response:
+\begin{equation}
+P(\text{trigger} \mid t, \mathbf{x}) = \sigma\left(\beta_0 + \beta_1 \cdot \log(t) + \beta_2 \cdot S_h + \beta_3 \cdot \Delta P\right)
+\label{eq:trigger}
+\end{equation}
+where $\sigma(\cdot)$ is the sigmoid function, $t$ is current dwell time, $S_h = 1/(v_\text{rot} + \epsilon)$ is head stability (inverse rotational velocity in rad/s), and $\Delta P$ is pupil dilation from baseline (mm).
+
+Each variable requires calibration. Pupil baseline $P_0$ is computed as the mean pupil diameter during the 0--200ms window after gaze onset (before task-evoked dilation emerges); $\Delta P = P_{200\text{--}700} - P_0$ then captures task-evoked dilation. Head stability $S_h$ is computed from rotational velocity averaged over a sliding 500ms window; $\epsilon = 0.01$ prevents division by zero during complete stillness. The log-transform on time captures diminishing information gain from additional dwell duration.
+
+The coefficients $\boldsymbol{\beta} = (\beta_0, \beta_1, \beta_2, \beta_3)$ can be calibrated via logistic regression using RTA-coded binary labels (interested/not interested) as ground truth. Given a labeled dataset of viewing episodes with features $\mathbf{x}_i$ and labels $y_i \in \{0,1\}$, the optimal coefficients minimize cross-entropy loss. Leave-one-subject-out cross-validation provides unbiased estimates of generalization performance. For online personalization, user-specific coefficients $\boldsymbol{\beta}^{(u)}$ can be initialized from population priors and updated via maximum a posteriori estimation as new labeled episodes accumulate, enabling the system to adapt to individual viewing styles within a single session.
+
+\subsection{Limitations}
+
+Several limitations constrain interpretation. First, head translational velocity may confound head stability with locomotion; joystick movement was not masked from the analysis, so the weaker positional velocity effect ($\beta$=-0.158) should be interpreted cautiously. Future work should separate head-in-world motion from head-relative-to-body micro-movements. Second, the temporal phase analysis focused on episodes with dwell time $\geq$3s (N=312), which improves reliability but may bias toward more engaged viewing; effects for shorter episodes remain unclear. We modeled phase effects with an LMM including subject and exhibit random intercepts, but future work should test robustness under alternative phase definitions (e.g., fixed-time windows). Third, pupillometry in VR is susceptible to artifacts from vergence, accommodation, and luminance changes despite our controlled lighting; we did not model object luminance or viewing distance. Fourth, we used dwell time as a proxy for engagement without ground-truth interest labels; although RTA data exists, systematic coding for interest was not completed. Fifth, current analyses use episode-level aggregate features; real-time triggering requires evaluation of early-window features (e.g., first 500ms) with proper cross-validation.
+
+\section{Conclusion}
+
+We investigated behavioral markers of sustained viewing during VR museum exploration beyond traditional dwell time metrics. Head rotational stability significantly predicts dwell time, viewing episodes show a characteristic two-phase temporal pattern, and pupil dilation at gaze onset is larger for long-dwell episodes. By incorporating head stability and early pupil response alongside dwell time, VR applications could achieve more accurate attention-based triggering with fewer false positives. Future work should validate these markers against explicit interest ratings and develop composite triggering algorithms with early-window prediction.
+
+\section*{Acknowledgments}
+\textbf{Privacy and Ethics Statement:} Gaze, head motion, and pupil data were collected with informed consent and stored as anonymized identifiers. Because attention inference can be misused for surveillance, deployments should provide clear disclosure and opt-in consent.
+
+\textbf{Use of AI Writing Tools:} We used AI-assisted writing tools to improve clarity in early drafts; all technical claims, analyses, and interpretations were reviewed and verified by the authors.
+
+\bibliographystyle{ACM-Reference-Format}
+\bibliography{references}
+
+\end{document}
+

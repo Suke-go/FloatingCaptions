@@ -1,0 +1,80 @@
+This is BibTeX, Version 0.99d (TeX Live 2025)
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: paper_v2.aux
+The style file: ACM-Reference-Format.bst
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated wiz_functions (elt_size=4) to 6000 items from 3000.
+Database file #1: references.bib
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated wiz_functions (elt_size=4) to 9000 items from 6000.
+Reallocated glb_str_ptr (elt_size=4) to 20 items from 10.
+Reallocated global_strs (elt_size=200001) to 20 items from 10.
+Reallocated glb_str_end (elt_size=4) to 20 items from 10.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Warning--empty publisher in aziz2024
+Warning--empty address in aziz2024
+Warning--page numbers missing in both pages and numpages fields in aziz2024
+Warning--page numbers missing in both pages and numpages fields in barkevich2024
+Warning--page numbers missing in both pages and numpages fields in clay2019
+Warning--page numbers missing in both pages and numpages fields in grootjen2024
+Warning--empty address in holmqvist2011
+Warning--empty publisher in hu2020
+Warning--empty address in hu2020
+Warning--page numbers missing in both pages and numpages fields in isomoto2023
+Warning--empty publisher in lu2021
+Warning--empty address in lu2021
+Warning--page numbers missing in both pages and numpages fields in lu2021
+Warning--page numbers missing in both pages and numpages fields in mathot2018
+Warning--empty publisher in mutasim2021
+Warning--empty address in mutasim2021
+Warning--page numbers missing in both pages and numpages fields in mutasim2021
+Warning--empty publisher in shimizu2025
+Warning--empty address in shimizu2025
+Warning--page numbers missing in both pages and numpages fields in shimizu2025
+Warning--empty publisher in zhang2011
+Warning--empty address in zhang2011
+Warning--empty publisher in spakov2004
+Warning--empty address in spakov2004
+You've used 22 entries,
+            6273 wiz_defined-function locations,
+            1635 strings with 21672 characters,
+and the built_in function-call counts, 24401 in all, are:
+= -- 3419
+> -- 686
+< -- 0
++ -- 221
+- -- 239
+* -- 1608
+:= -- 2223
+add.period$ -- 107
+call.type$ -- 22
+change.case$ -- 149
+chr.to.int$ -- 22
+cite$ -- 46
+duplicate$ -- 2183
+empty$ -- 1548
+format.name$ -- 303
+if$ -- 6259
+int.to.chr$ -- 2
+int.to.str$ -- 1
+missing$ -- 93
+newline$ -- 208
+num.names$ -- 154
+pop$ -- 921
+preamble$ -- 1
+purify$ -- 325
+quote$ -- 0
+skip$ -- 740
+stack$ -- 0
+substring$ -- 1683
+swap$ -- 185
+text.length$ -- 0
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 449
+warning$ -- 24
+while$ -- 140
+width$ -- 0
+write$ -- 440
+(There were 24 warnings)

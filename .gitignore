@@ -1,0 +1,100 @@
+# ETRA Project .gitignore
+# =========================
+
+# ========================================
+# Large Data Files (RTA Data)
+# ========================================
+# RTAデータは大容量のため除外（両パス対応）
+**/RTAデータ/
+*.mp4
+*.avi
+*.mov
+*.mkv
+
+# Raw CSV data (can be regenerated)
+**/RTAデータ/**/*.csv
+
+# ========================================
+# Analysis Outputs (Regenerable)
+# ========================================
+**/behavior_analysis/
+**/erpr_vor_analysis/
+**/gaze_pattern_analysis/*.png
+**/gaze_pattern_analysis/*.csv
+**/lmm_analysis/
+**/visualizations/
+**/paper_figures/*.png
+**/paper_figures/*.pdf
+
+# ========================================
+# Python
+# ========================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+venv/
+ENV/
+env/
+.venv/
+
+# ========================================
+# IDE / Editor
+# ========================================
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# ========================================
+# Large PDFs (Optional - uncomment if needed)
+# ========================================
+# *.pdf
+
+# ========================================
+# Temporary Files
+# ========================================
+*.tmp
+*.temp
+*.log
+*.bak
+
+# ========================================
+# Unity (if added later)
+# ========================================
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+[Mm]emoryCaptures/
+*.csproj
+*.unityproj
+*.sln
+*.suo
+*.user
+*.userprefs
+*.pidb
+*.booproj

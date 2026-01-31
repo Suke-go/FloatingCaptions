@@ -1,0 +1,208 @@
+%%% -*-BibTeX-*-
+%%% Do NOT edit. File created by BibTeX with style
+%%% ACM-Reference-Format-Journals [18-Jan-2012].
+
+\begin{thebibliography}{22}
+
+%%% ====================================================================
+%%% NOTE TO THE USER: you can override these defaults by providing
+%%% customized versions of any of these macros before the \bibliography
+%%% command.  Each of them MUST provide its own final punctuation,
+%%% except for \shownote{} and \showURL{}.  The latter two
+%%% do not use final punctuation, in order to avoid confusing it with
+%%% the Web address.
+%%%
+%%% To suppress output of a particular field, define its macro to expand
+%%% to an empty string, or better, \unskip, like this:
+%%%
+%%% \newcommand{\showURL}[1]{\unskip}   % LaTeX syntax
+%%%
+%%% \def \showURL #1{\unskip}           % plain TeX syntax
+%%%
+%%% ====================================================================
+
+\ifx \showCODEN    \undefined \def \showCODEN     #1{\unskip}     \fi
+\ifx \showISBNx    \undefined \def \showISBNx     #1{\unskip}     \fi
+\ifx \showISBNxiii \undefined \def \showISBNxiii  #1{\unskip}     \fi
+\ifx \showISSN     \undefined \def \showISSN      #1{\unskip}     \fi
+\ifx \showLCCN     \undefined \def \showLCCN      #1{\unskip}     \fi
+\ifx \shownote     \undefined \def \shownote      #1{#1}          \fi
+\ifx \showarticletitle \undefined \def \showarticletitle #1{#1}   \fi
+\ifx \showURL      \undefined \def \showURL       {\relax}        \fi
+% The following commands are used for tagged output and should be
+% invisible to TeX
+\providecommand\bibfield[2]{#2}
+\providecommand\bibinfo[2]{#2}
+\providecommand\natexlab[1]{#1}
+\providecommand\showeprint[2][]{arXiv:#2}
+
+\bibitem[Aziz and Komogortsev(2024)]%
+        {aziz2024}
+\bibfield{author}{\bibinfo{person}{Shafayat Aziz} {and} \bibinfo{person}{Oleg~V Komogortsev}.} \bibinfo{year}{2024}\natexlab{}.
+\newblock \showarticletitle{Evaluation of Eye Tracking Signal Quality for Virtual Reality Applications: A Case Study in the Meta Quest Pro}. In \bibinfo{booktitle}{\emph{Proc. ETRA Adjunct}}.
+\newblock
+
+
+\bibitem[Barkevich et~al\mbox{.}(2024)]%
+        {barkevich2024}
+\bibfield{author}{\bibinfo{person}{Nicholas Barkevich}, \bibinfo{person}{Reynold~J Bailey}, {and} \bibinfo{person}{Jeff~B Pelz}.} \bibinfo{year}{2024}\natexlab{}.
+\newblock \showarticletitle{Using Deep Learning to Increase Eye-Tracking Robustness, Accuracy, and Precision in Virtual Reality}.
+\newblock \bibinfo{journal}{\emph{Proc. ACM Comput. Graph. Interact. Tech.}} \bibinfo{volume}{7}, \bibinfo{number}{1} (\bibinfo{year}{2024}).
+\newblock
+
+
+\bibitem[Beatty(1982)]%
+        {beatty1982}
+\bibfield{author}{\bibinfo{person}{Jackson Beatty}.} \bibinfo{year}{1982}\natexlab{}.
+\newblock \showarticletitle{Task-Evoked Pupillary Responses, Processing Load, and the Structure of Processing Resources}.
+\newblock \bibinfo{journal}{\emph{Psychological Bulletin}} \bibinfo{volume}{91}, \bibinfo{number}{2} (\bibinfo{year}{1982}), \bibinfo{pages}{276--292}.
+\newblock
+
+
+\bibitem[Clay et~al\mbox{.}(2019)]%
+        {clay2019}
+\bibfield{author}{\bibinfo{person}{Viviane Clay}, \bibinfo{person}{Peter König}, {and} \bibinfo{person}{Sabine~U König}.} \bibinfo{year}{2019}\natexlab{}.
+\newblock \showarticletitle{Eye Tracking in Virtual Reality}.
+\newblock \bibinfo{journal}{\emph{Journal of Eye Movement Research}} \bibinfo{volume}{12}, \bibinfo{number}{1} (\bibinfo{year}{2019}).
+\newblock
+
+
+\bibitem[Dondi and Porta(2023)]%
+        {dondi2023}
+\bibfield{author}{\bibinfo{person}{Piercarlo Dondi} {and} \bibinfo{person}{Marco Porta}.} \bibinfo{year}{2023}\natexlab{}.
+\newblock \showarticletitle{Gaze-Based Human-Computer Interaction for Museums and Exhibitions: Technologies, Applications and Future Perspectives}.
+\newblock \bibinfo{journal}{\emph{Electronics}}  \bibinfo{volume}{12} (\bibinfo{year}{2023}), \bibinfo{pages}{3064}.
+\newblock
+
+
+\bibitem[Ginns(2006)]%
+        {ginns2006}
+\bibfield{author}{\bibinfo{person}{Paul Ginns}.} \bibinfo{year}{2006}\natexlab{}.
+\newblock \showarticletitle{Integrating Information: A Meta-Analysis of the Spatial Contiguity and Temporal Contiguity Effects}.
+\newblock \bibinfo{journal}{\emph{Learning and Instruction}} \bibinfo{volume}{16}, \bibinfo{number}{6} (\bibinfo{year}{2006}), \bibinfo{pages}{511--525}.
+\newblock
+
+
+\bibitem[Grootjen et~al\mbox{.}(2024)]%
+        {grootjen2024}
+\bibfield{author}{\bibinfo{person}{Marc Grootjen}, \bibinfo{person}{Anna~Maria Feit}, \bibinfo{person}{Daniel Bachmann}, \bibinfo{person}{Daniel Weiskopf}, {and} \bibinfo{person}{Andreas Bulling}.} \bibinfo{year}{2024}\natexlab{}.
+\newblock \showarticletitle{Your Eyes on Speed: Using Pupil Dilation to Adaptively Select Speed-Reading Parameters in Virtual Reality}.
+\newblock \bibinfo{journal}{\emph{Proc. ACM Hum.-Comput. Interact.}} \bibinfo{volume}{8}, \bibinfo{number}{ETRA} (\bibinfo{year}{2024}).
+\newblock
+
+
+\bibitem[Holmqvist et~al\mbox{.}(2011)]%
+        {holmqvist2011}
+\bibfield{author}{\bibinfo{person}{Kenneth Holmqvist}, \bibinfo{person}{Marcus Nyström}, \bibinfo{person}{Richard Andersson}, \bibinfo{person}{Richard Dewhurst}, \bibinfo{person}{Halszka Jarodzka}, {and} \bibinfo{person}{Joost Van~de Weijer}.} \bibinfo{year}{2011}\natexlab{}.
+\newblock \bibinfo{booktitle}{\emph{Eye Tracking: A Comprehensive Guide to Methods and Measures}}.
+\newblock \bibinfo{publisher}{Oxford University Press}.
+\newblock
+
+
+\bibitem[Hu(2020)]%
+        {hu2020}
+\bibfield{author}{\bibinfo{person}{Zhiming Hu}.} \bibinfo{year}{2020}\natexlab{}.
+\newblock \showarticletitle{Gaze Analysis and Prediction in Virtual Reality}. In \bibinfo{booktitle}{\emph{IEEE VR Workshops}}. \bibinfo{pages}{543--544}.
+\newblock
+
+
+\bibitem[Isomoto et~al\mbox{.}(2023)]%
+        {isomoto2023}
+\bibfield{author}{\bibinfo{person}{Takuto Isomoto}, \bibinfo{person}{Shota Yamanaka}, {and} \bibinfo{person}{Buntarou Shizuki}.} \bibinfo{year}{2023}\natexlab{}.
+\newblock \showarticletitle{Exploring Dwell-time from Human Cognitive Processes for Dwell Selection}.
+\newblock \bibinfo{journal}{\emph{Proc. ACM Hum.-Comput. Interact.}} \bibinfo{volume}{7}, \bibinfo{number}{ETRA} (\bibinfo{year}{2023}).
+\newblock
+
+
+\bibitem[Just and Carpenter(1976)]%
+        {just1976}
+\bibfield{author}{\bibinfo{person}{Marcel~Adam Just} {and} \bibinfo{person}{Patricia~A Carpenter}.} \bibinfo{year}{1976}\natexlab{}.
+\newblock \showarticletitle{Eye Fixations and Cognitive Processes}.
+\newblock \bibinfo{journal}{\emph{Cognitive Psychology}} \bibinfo{volume}{8}, \bibinfo{number}{4} (\bibinfo{year}{1976}), \bibinfo{pages}{441--480}.
+\newblock
+
+
+\bibitem[Land(2009)]%
+        {land2009}
+\bibfield{author}{\bibinfo{person}{Michael~F Land}.} \bibinfo{year}{2009}\natexlab{}.
+\newblock \showarticletitle{Vision, Eye Movements, and Natural Behavior}.
+\newblock \bibinfo{journal}{\emph{Visual Neuroscience}} \bibinfo{volume}{26}, \bibinfo{number}{1} (\bibinfo{year}{2009}), \bibinfo{pages}{51--62}.
+\newblock
+
+
+\bibitem[Lu et~al\mbox{.}(2021)]%
+        {lu2021}
+\bibfield{author}{\bibinfo{person}{Haoyang Lu}, \bibinfo{person}{Hao Ren}, \bibinfo{person}{Yansong Feng}, \bibinfo{person}{Shuhui Wang}, \bibinfo{person}{Shuai Ma}, {and} \bibinfo{person}{Wen Gao}.} \bibinfo{year}{2021}\natexlab{}.
+\newblock \showarticletitle{GazeTance Guidance: Gaze and Distance-Based Content Presentation for Virtual Museum}. In \bibinfo{booktitle}{\emph{IEEE VR Workshops}}.
+\newblock
+
+
+\bibitem[Mathôt(2018)]%
+        {mathot2018}
+\bibfield{author}{\bibinfo{person}{Sebastiaan Mathôt}.} \bibinfo{year}{2018}\natexlab{}.
+\newblock \showarticletitle{Pupillometry: Psychology, Physiology, and Function}.
+\newblock \bibinfo{journal}{\emph{Journal of Cognition}} \bibinfo{volume}{1}, \bibinfo{number}{1} (\bibinfo{year}{2018}).
+\newblock
+
+
+\bibitem[Mutasim et~al\mbox{.}(2021)]%
+        {mutasim2021}
+\bibfield{author}{\bibinfo{person}{Abdul~Karim Mutasim}, \bibinfo{person}{Anil~U Batmaz}, {and} \bibinfo{person}{Wolfgang Stuerzlinger}.} \bibinfo{year}{2021}\natexlab{}.
+\newblock \showarticletitle{Pinch, Click, or Dwell: Comparing Different Selection Techniques for Eye-Gaze-Based Pointing in Virtual Reality}. In \bibinfo{booktitle}{\emph{Proc. ETRA}}.
+\newblock
+
+
+\bibitem[Pan et~al\mbox{.}(2025)]%
+        {pan2025}
+\bibfield{author}{\bibinfo{person}{Xufeng Pan}, \bibinfo{person}{Mel Slater}, {and} \bibinfo{person}{Maria~V Sanchez-Vives}.} \bibinfo{year}{2025}\natexlab{}.
+\newblock \showarticletitle{Head-EyeK: Head-Eye Coordination and Control Learned in Virtual Reality}.
+\newblock \bibinfo{journal}{\emph{IEEE Trans. Vis. Comput. Graph.}} \bibinfo{volume}{31}, \bibinfo{number}{1} (\bibinfo{year}{2025}), \bibinfo{pages}{1--12}.
+\newblock
+
+
+\bibitem[Pielage et~al\mbox{.}(2025)]%
+        {pielage2025}
+\bibfield{author}{\bibinfo{person}{Hidde Pielage}, \bibinfo{person}{Adriana~A Zekveld}, \bibinfo{person}{Niek~J Versfeld}, {and} \bibinfo{person}{Sophia~E Kramer}.} \bibinfo{year}{2025}\natexlab{}.
+\newblock \showarticletitle{Using Pupillometry in Virtual Reality as a Tool for Speech-in-Noise Research}.
+\newblock \bibinfo{journal}{\emph{Ear and Hearing}} \bibinfo{volume}{46}, \bibinfo{number}{3} (\bibinfo{year}{2025}), \bibinfo{pages}{678--690}.
+\newblock
+
+
+\bibitem[Shimizu et~al\mbox{.}(2025)]%
+        {shimizu2025}
+\bibfield{author}{\bibinfo{person}{Kosuke Shimizu}, \bibinfo{person}{Shoya Komatsu}, {and} \bibinfo{person}{Hidenori Watanave}.} \bibinfo{year}{2025}\natexlab{}.
+\newblock \showarticletitle{Floating Captions: Eyetracking-based Context-aware Captioning System for Immersive VR Contents}. In \bibinfo{booktitle}{\emph{Proc. ETRA}}.
+\newblock
+
+
+\bibitem[Sweller(1988)]%
+        {sweller1988}
+\bibfield{author}{\bibinfo{person}{John Sweller}.} \bibinfo{year}{1988}\natexlab{}.
+\newblock \showarticletitle{Cognitive Load During Problem Solving: Effects on Learning}.
+\newblock \bibinfo{journal}{\emph{Cognitive Science}} \bibinfo{volume}{12}, \bibinfo{number}{2} (\bibinfo{year}{1988}), \bibinfo{pages}{257--285}.
+\newblock
+
+
+\bibitem[Unema et~al\mbox{.}(2005)]%
+        {unema2005}
+\bibfield{author}{\bibinfo{person}{Pieter~JA Unema}, \bibinfo{person}{Sebastian Pannasch}, \bibinfo{person}{Markus Joos}, {and} \bibinfo{person}{Boris~M Velichkovsky}.} \bibinfo{year}{2005}\natexlab{}.
+\newblock \showarticletitle{Time Course of Information Processing during Scene Perception}.
+\newblock \bibinfo{journal}{\emph{Visual Cognition}} \bibinfo{volume}{12}, \bibinfo{number}{3} (\bibinfo{year}{2005}), \bibinfo{pages}{473--494}.
+\newblock
+
+
+\bibitem[Zhang et~al\mbox{.}(2011)]%
+        {zhang2011}
+\bibfield{author}{\bibinfo{person}{Xuan Zhang}, \bibinfo{person}{Peng Xu}, \bibinfo{person}{Qiang Zhang}, {and} \bibinfo{person}{Hongbin Zha}.} \bibinfo{year}{2011}\natexlab{}.
+\newblock \showarticletitle{Speed-Accuracy Trade-off in Dwell-Based Eye Pointing Tasks at Different Cognitive Levels}. In \bibinfo{booktitle}{\emph{Proc. PETMEI}}. \bibinfo{pages}{37--42}.
+\newblock
+
+
+\bibitem[Špakov and Miniotas(2004)]%
+        {spakov2004}
+\bibfield{author}{\bibinfo{person}{Oleg Špakov} {and} \bibinfo{person}{Darius Miniotas}.} \bibinfo{year}{2004}\natexlab{}.
+\newblock \showarticletitle{On-Line Adjustment of Dwell Time for Target Selection by Gaze}. In \bibinfo{booktitle}{\emph{Proc. NordiCHI}}. \bibinfo{pages}{203--206}.
+\newblock
+
+
+\end{thebibliography}

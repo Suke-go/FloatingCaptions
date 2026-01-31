@@ -1,0 +1,192 @@
+\documentclass[sigconf,review,anonymous]{acmart}
+
+% --- Packages ---
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{xcolor}
+
+% --- Metadata (adjust later) ---
+\setcopyright{acmlicensed}
+\acmConference[ETRA '26]{Symposium on Eye Tracking Research \& Applications}{June 2026}{Location}
+\acmYear{2026}
+\acmDOI{XXXXXXX.XXXXXXX}
+\acmISBN{978-1-4503-XXXX-X/26/06}
+
+\title{GazeReplayVR: Integrated Binocular Gaze and Time-Series Head Pose Re-rendering for Retrospective Think-Aloud in Virtual Reality}
+
+\begin{document}
+
+\begin{abstract}
+Evaluating moment-to-moment cognition in immersive virtual reality (VR) remains difficult because (1) head-mounted displays present binocular imagery, complicating the notion of a single reference recording for gaze replay, and (2) retrospective think-aloud (RTA) becomes burdensome when participants must re-watch long, continuous recordings. We present \textit{GazeReplayVR}, a VR-oriented pipeline that integrates binocular gaze samples into a canonical ``third-gaze'' signal, synchronizes it with time-series head pose, and re-renders a single-view replay video with gaze overlays in Unity. The resulting replay acts as an auditable stimulus for RTA while preserving temporal alignment with the underlying telemetry. In a pilot virtual museum exploration (N=5) using a commercial eye-tracking HMD, participants reported that the gaze overlay helped them recall fine-grained rationales (e.g., why they stopped, why they skipped captions) beyond what is typically elicited from video-only replay. We discuss design trade-offs, potential bias introduced by gaze overlays, and how the generated artifacts can support scalable episode-based RTA and future interest modeling in VR.
+\end{abstract}
+
+\keywords{Virtual Reality, Eye Tracking, Binocular Gaze Integration, Retrospective Think-Aloud, User Experience Evaluation, Gaze Replay}
+
+% Optional CCS (fill if needed)
+% \begin{CCSXML}
+% \end{CCSXML}
+% \ccsdesc[500]{Human-centered computing~Virtual reality}
+% \ccsdesc[300]{Human-centered computing~User studies}
+% \ccsdesc[300]{Human-centered computing~Interaction techniques}
+
+\section{Introduction}
+Virtual reality (VR) museums and cultural heritage experiences increasingly incorporate textual captions to support interpretation, learning, and emotional engagement. Yet captions in immersive VR are a double-edged sword: presenting them too early or too often interrupts exploration and occludes the scene, while presenting them too late misses the user’s moment of curiosity. Designing a caption system that appears \emph{at the right time}—when the user actually wants more information—remains a central challenge for VR experience design.
+
+Eye tracking provides a promising signal for context-aware captioning because gaze offers an objective, time-resolved view of what a user attends to. A common design choice is to trigger a caption when the user dwells on an exhibit for a fixed duration (e.g., 0.5\,s). This heuristic is attractive because it is simple and hardware-agnostic. However, a single dwell threshold is rarely optimal. In VR, gaze behavior varies substantially with viewing distance, locomotion, head motion, exhibit layout, reading preference, and individual differences (e.g., “look-first” vs. “read-first” visitors). As a result, fixed-threshold systems either over-trigger (captions appear during casual glances) or under-trigger (captions fail to appear when the user is genuinely curious), and they often require ad-hoc tuning per content or per deployment.
+
+In our prior work, we introduced a gaze-based captioning concept for immersive VR content using a dwell-time trigger. While this established feasibility, the trigger parameter was intentionally conservative and heuristic-driven. The next step—necessary for robust deployment—is to replace heuristic dwell thresholds with a principled, data-driven criterion that (1) reduces disruptive false positives, (2) minimizes triggering latency when information need arises, and (3) adapts to VR-specific context and user variability.
+
+A key difficulty is that “wanting a caption” is not directly observable from gaze alone. Gaze indicates \emph{where} a user looks, but not reliably \emph{why}. For example, long dwell can reflect interest, confusion, or visual complexity; conversely, users may want a caption before prolonged fixation, such as when they quickly seek identification (name/author/era) or confirm a hypothesis. We therefore treat caption timing as an inference problem over a latent \emph{information-need state}, and we ground this inference using retrospective verbal reports. Specifically, we leverage gaze-overlaid replay to elicit Retrospective Think-Aloud (RTA) reports aligned to the original VR timeline. This enables us to annotate moments when a user reports wanting more information (and what kind), creating supervision for optimizing triggers beyond a single dwell threshold.
+
+In this paper, we present a VR-specific approach to optimizing gaze-based caption triggers for a virtual museum. We integrate binocular gaze into a canonical reference signal for stable replay and analysis, synchronize gaze with head pose, and derive episode-level features (e.g., dwell, revisit, approach distance, head motion) that capture context beyond fixation duration. Using RTA-aligned labels of information need, we optimize triggering policies to improve the trade-off between disruption and missed opportunities. In a pilot study in a VR museum exploration task (N=5), we demonstrate that gaze-overlaid replay elicits fine-grained rationales (e.g., why users paused, why they skipped captions) and provides actionable ground truth for refining trigger timing.
+
+
+\section{Related Work}
+\subsection{Eye tracking in VR}
+Eye tracking in VR has become increasingly common, enabling analysis of visual behavior in 3D environments and informing design and evaluation.
+Prior work has surveyed VR eye tracking opportunities and pitfalls, including calibration, tracking loss, and interpretation challenges \cite{clay2019}.
+Large-scale datasets such as GazeBaseVR have accelerated methodology development for binocular gaze in VR \cite{lohr2022}.
+Nevertheless, the ``two-view'' nature of VR complicates replay and annotation workflows compared to desktop settings.
+
+\subsection{Retrospective verbal reports and gaze replay}
+Protocol analysis positions verbal reports as valuable but methodologically sensitive data sources \cite{ericsson1993}.
+In usability testing, replay cues have been used to improve retrospective reports; notably, eye-movement replay can guide participants to recall what they attended and why \cite{eger2007}.
+In VR, the potential benefit is substantial, but implementation requires careful handling of binocular rendering and temporal alignment.
+
+\section{System Overview}
+Figure~\ref{fig:pipeline} outlines our pipeline.
+We log synchronized time-series data (binocular gaze and head pose), compute a canonical third-gaze signal, and generate a re-rendered replay video with gaze overlays.
+The pipeline exports both (i) replay videos used as RTA stimuli and (ii) analysis-ready CSV telemetry aligned by timestamps.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\linewidth]{pipeline_placeholder.pdf}
+  \caption{Overview of GazeReplayVR. Binocular gaze and head pose are logged as time-series, fused into a canonical third-gaze signal, and re-rendered into a single-view replay video with gaze overlays.}
+  \label{fig:pipeline}
+\end{figure}
+
+\subsection{Data Logging}
+All signals are recorded as CSV time-series rows indexed by a monotonically increasing timestamp $t$ (ms).
+We log binocular gaze as 2D coordinates in the HMD-provided normalized viewport (or pixel) coordinate system along with per-sample validity and confidence values:
+\begin{equation}
+\mathbf{g}_L(t)=(x_L(t),y_L(t))^T,\quad \mathbf{g}_R(t)=(x_R(t),y_R(t))^T.
+\end{equation}
+Head pose is logged as a 6DoF rigid transform $\mathbf{H}(t)=\{\mathbf{p}(t),\mathbf{q}(t)\}$ where $\mathbf{p}(t)\in\mathbb{R}^3$ is position and $\mathbf{q}(t)$ is orientation in quaternion form.
+Invalid tracking periods (e.g., blink, occlusion) are retained rather than discarded to enable quality assessment.
+
+\subsection{Binocular Integration: The Third Gaze}
+To obtain a single canonical gaze representation for replay and downstream processing, we compute a \textit{third gaze} $\mathbf{g}_{3rd}(t)$ from binocular inputs:
+\begin{equation}
+\mathbf{g}_{3rd}(t)=f(\mathbf{g}_L(t),\mathbf{g}_R(t)).
+\end{equation}
+Our baseline fusion is validity-aware and confidence-weighted.
+Let $v_L(t),v_R(t)\in\{0,1\}$ denote per-eye validity and $c_L(t),c_R(t)\in[0,1]$ denote confidence.
+Then:
+\begin{equation}
+\mathbf{g}_{3rd}(t)=
+\begin{cases}
+\dfrac{c_L(t)\mathbf{g}_L(t)+c_R(t)\mathbf{g}_R(t)}{c_L(t)+c_R(t)} & \text{if } v_L=v_R=1 \\
+\mathbf{g}_L(t) & \text{if } v_L=1, v_R=0 \\
+\mathbf{g}_R(t) & \text{if } v_L=0, v_R=1 \\
+\text{NaN} & \text{if } v_L=v_R=0.
+\end{cases}
+\end{equation}
+We optionally apply light temporal stabilization to suppress short-lived outliers while preserving rapid gaze shifts (e.g., an exponential moving average on valid samples with a small smoothing factor).
+This conservative design aims to provide a stable integrated signal without requiring a full cyclopean 3D gaze ray model; such geometric integration is left as future work when per-eye ray origins and projection matrices are available.
+
+\subsection{Re-rendering and Gaze Overlay in Unity}
+Instead of capturing raw stereo views, we reconstruct a single-view replay by driving a virtual camera with recorded head pose.
+At each replay frame aligned to timestamp $t$, we set the camera pose to $\mathbf{H}(t)$ and overlay a marker at $\mathbf{g}_{3rd}(t)$ in the rendered image.
+Marker visibility is modulated by validity; additional encodings (e.g., marker size by dwell) can be enabled without altering the canonical indexing.
+
+We support two replay modes:
+\textbf{(i) Egocentric replay}, approximating the participant's viewpoint, and
+\textbf{(ii) Allocentric replay}, placing the camera at a fixed viewpoint to interpret distance and approach behaviors.
+Both modes share the same time base, enabling synchronized qualitative and quantitative analysis.
+
+\section{Pilot Study}
+We conducted a formative case study to test feasibility and gather initial qualitative evidence that gaze-overlaid replay supports richer retrospective verbalization.
+
+\subsection{Participants and Apparatus}
+Five participants (3 male, 2 female; mean age 26.2, SD 5.6) with prior VR experience volunteered.
+We used an eye-tracking VR HMD (PICO 4 Enterprise) with built-in binocular eye tracking and 6DoF inside-out tracking.
+The VR application was developed in Unity.
+
+\subsection{Task: Virtual Museum Exploration}
+Participants freely explored a virtual museum environment populated with multiple exhibits arranged in a grid (2$\times$3).
+They navigated using a joystick and were instructed to examine exhibits as they wished.
+During exploration, we recorded binocular gaze, head pose, and replay-relevant environment states required for re-rendering.
+
+\subsection{RTA Procedure}
+After exploration, we generated a replay video from logged data.
+Participants then performed RTA while watching their replay and verbalizing thoughts, intentions, and feelings experienced during the task.
+They could pause the replay using a button to comment in more detail.
+Audio was recorded for transcription and qualitative analysis.
+
+\subsection{Measures}
+We used:
+(1) a 5-point Likert rating on perceived accuracy of the third-gaze overlay (1: not aligned at all, 5: highly aligned), and
+(2) qualitative analysis of RTA utterances focusing on cognitive rationales not directly inferable from gaze alone (e.g., motivations, emotions, strategies).
+
+\section{Results}
+\subsection{Perceived Accuracy of Gaze Overlay}
+Participants rated perceived alignment between the gaze marker and their remembered point of regard as high (M=4.2/5, SD=0.4), suggesting that the integrated third gaze provided an acceptable reference for replay in this setting.
+
+\subsection{Qualitative Evidence: Richer Cognitive Rationales}
+Across participants, gaze-overlaid replay frequently served as a cue for recalling rationales that were otherwise difficult to reconstruct from video alone.
+Participants produced explanations such as why they stopped at a particular exhibit, why they inspected a face or texture, and why they did not immediately read a caption.
+We observed recurrent themes:
+\textbf{(i) affect-driven attention} (e.g., ``the expression looked sad, so I kept looking''),
+\textbf{(ii) strategy and sequencing} (e.g., ``I usually read captions first, but here I didn't''),
+and \textbf{(iii) episodic recollection} (e.g., ``I forgot this was the most interesting part until seeing my gaze linger'').
+These accounts highlight how gaze overlays can reduce the need to verbally disambiguate objects (``the gold object in the back right...''), allowing participants to allocate more effort to describing internal states and causal explanations.
+
+\section{Discussion}
+\subsection{Why a Canonical Third Gaze Helps in VR}
+A core challenge in VR is the lack of a single reference view due to binocular rendering.
+By computing a conservative third gaze and using it consistently for both replay and analysis, we reduce ambiguity in post-hoc interpretation and enable auditable alignment between verbal reports and telemetry.
+
+\subsection{Potential Bias and Methodological Cautions}
+Gaze overlays may also bias retrospective reports: participants might over-interpret gaze as interest or rationalize attention post-hoc.
+Thus, gaze-overlaid RTA should be treated as a cueing technique rather than a ground truth probe of cognition.
+Future work should compare replay conditions (e.g., video-only vs gaze-overlaid) and develop coding schemes to quantify changes in utterance types.
+
+\subsection{Limitations and Future Work}
+This is a small pilot study with a single task context and limited sample size.
+We did not evaluate a full 3D cyclopean gaze ray model or systematic AOI labeling in this version.
+To improve scalability, we plan to extend the pipeline to automatically extract short episodes (e.g., fixation-aggregated segments) and to generate matched control clips, reducing RTA burden for long sessions and enabling dataset creation for modeling interest and attention dynamics in VR.
+
+\section{Conclusion}
+We presented GazeReplayVR, a pipeline that integrates binocular gaze into a canonical third gaze, synchronizes it with time-series head pose, and re-renders a single-view replay video with gaze overlays for RTA in VR.
+A pilot virtual museum study suggests that gaze overlays can function as retrieval cues that support richer cognitive rationales during retrospective reporting.
+We believe this approach can contribute to VR evaluation practice and support future work on scalable episode-based analysis and interest modeling.
+
+\bibliographystyle{ACM-Reference-Format}
+\begin{thebibliography}{9}
+
+\bibitem{clay2019}
+V. Clay, P. K{\"o}nig, and S. U. K{\"o}nig.
+\newblock Eye Tracking in Virtual Reality.
+\newblock {\em Journal of Eye Movement Research}, 12(1), 2019.
+
+\bibitem{lohr2022}
+D. Lohr, S. Aziz, L. Friedman, and O. V. Komogortsev.
+\newblock GazeBaseVR: A Large-Scale, Longitudinal, Binocular Eye-Tracking Dataset Collected in Virtual Reality.
+\newblock {\em arXiv:2210.07533}, 2022.
+
+\bibitem{ericsson1993}
+K. A. Ericsson and H. A. Simon.
+\newblock {\em Protocol Analysis: Verbal Reports as Data}.
+\newblock MIT Press, 1993.
+
+\bibitem{eger2007}
+N. Eger, L. J. Ball, R. Stevens, and J. Dodd.
+\newblock Cueing Retrospective Verbal Reports in Usability Testing through Eye-Movement Replay.
+\newblock In {\em Proc. BCS-HCI}, 2007.
+
+\end{thebibliography}
+
+\end{document}
