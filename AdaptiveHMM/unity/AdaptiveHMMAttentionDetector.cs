@@ -32,10 +32,11 @@ namespace FloatingCaption.Attention
     /// </summary>
     public enum AdaptationMode
     {
-        Disabled,       // 適応なし
-        Calibrating,    // 初期キャリブレーション中
-        Exploring,      // 探索中（中速適応）
-        Confident       // 十分なサンプル後（低速適応）
+        Disabled,              // 適応なし
+        Calibrating,           // 初期キャリブレーション中（従来型）
+        TutorialCalibrating,   // チュートリアル埋め込み型キャリブレーション中
+        Exploring,             // 探索中（中速適応）
+        Confident              // 十分なサンプル後（低速適応）
     }
 
     /// <summary>
@@ -63,7 +64,7 @@ namespace FloatingCaption.Attention
         [SerializeField] private int sustainedFrames = 30;
 
         [Header("Calibration Settings")]
-        [SerializeField] private bool enableCalibration = true;
+        [SerializeField] private bool enableCalibration = false;
         [SerializeField] private int minCalibrationSamples = 30;
 
         [Header("Adaptation Settings")]
@@ -196,6 +197,7 @@ namespace FloatingCaption.Attention
                 adaptationMode = enableCalibration ? 
                     AdaptationMode.Calibrating : AdaptationMode.Exploring;
             }
+            // Note: TutorialCalibrating mode is set externally via StartTutorialCalibration()
 
             IsReady = true;
             Debug.Log($"AdaptiveHMM initialized. Mode: {adaptationMode}");
@@ -216,7 +218,8 @@ namespace FloatingCaption.Attention
         /// </summary>
         public void AddCalibrationGlancing(float[] features)
         {
-            if (adaptationMode != AdaptationMode.Calibrating) return;
+            if (adaptationMode != AdaptationMode.Calibrating && 
+                adaptationMode != AdaptationMode.TutorialCalibrating) return;
             calibrationGlancing.Add((float[])features.Clone());
             
             if (debugMode)
@@ -228,7 +231,8 @@ namespace FloatingCaption.Attention
         /// </summary>
         public void AddCalibrationEngaged(float[] features)
         {
-            if (adaptationMode != AdaptationMode.Calibrating) return;
+            if (adaptationMode != AdaptationMode.Calibrating && 
+                adaptationMode != AdaptationMode.TutorialCalibrating) return;
             calibrationEngaged.Add((float[])features.Clone());
             
             if (debugMode)
@@ -310,6 +314,57 @@ namespace FloatingCaption.Attention
                 means[1, f] = (means[0, f] + means[2, f]) / 2f;
                 stds[1, f] = (stds[0, f] + stds[2, f]) / 2f;
             }
+        }
+
+        #endregion
+
+        #region Tutorial Calibration API
+
+        /// <summary>
+        /// チュートリアル型キャリブレーションを開始
+        /// 外部のTutorialCalibrationControllerから呼び出される
+        /// </summary>
+        public void StartTutorialCalibration()
+        {
+            adaptationMode = AdaptationMode.TutorialCalibrating;
+            calibrationGlancing.Clear();
+            calibrationEngaged.Clear();
+            Debug.Log("AdaptiveHMM: Tutorial calibration started.");
+        }
+
+        /// <summary>
+        /// チュートリアル型キャリブレーションを完了
+        /// サンプルが十分であればパラメータ更新、不十分ならデフォルト値で続行
+        /// </summary>
+        public bool CompleteTutorialCalibration()
+        {
+            if (calibrationGlancing.Count >= minCalibrationSamples &&
+                calibrationEngaged.Count >= minCalibrationSamples)
+            {
+                // サンプル十分 → パラメータ更新
+                UpdateStateDistribution(0, calibrationGlancing);
+                UpdateStateDistribution(2, calibrationEngaged);
+                InterpolateOverviewState();
+                IsCalibrated = true;
+                Debug.Log($"AdaptiveHMM: Tutorial calibration complete. " +
+                    $"Glancing: {calibrationGlancing.Count}, Engaged: {calibrationEngaged.Count}");
+            }
+            else
+            {
+                // サンプル不足 → デフォルトパラメータのまま続行
+                Debug.LogWarning($"AdaptiveHMM: Insufficient tutorial samples. " +
+                    $"Glancing: {calibrationGlancing.Count}, Engaged: {calibrationEngaged.Count}. " +
+                    $"Using default parameters.");
+            }
+
+            // いずれの場合もExploringモードへ遷移（オンライン適応で補正）
+            adaptationMode = AdaptationMode.Exploring;
+            ResetForward();
+            calibrationGlancing.Clear();
+            calibrationEngaged.Clear();
+            OnCalibrationComplete?.Invoke();
+
+            return IsCalibrated;
         }
 
         #endregion
